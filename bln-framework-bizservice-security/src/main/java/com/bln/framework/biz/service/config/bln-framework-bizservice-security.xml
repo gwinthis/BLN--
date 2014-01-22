@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding ="UTF-8"?>
+
+<!-- ========================@业务服务安全对象 ========================-->
+<objects name = "bln-framework-bizservice-security">
+	
+	<!-- 业务服务类别-->	
+	<category name="bizservice">
+		
+		<!--  使用的时候需要添加这两个过滤器 -->
+		<!-- 服务过滤器，可以为多个
+		<object name="ServiceIntercepters" collection_type="array" component_creator="from_this_factory" component_class="com.bln.framework.biz.service.IServiceIntercepter">
+
+			<prop class="bizservice.intercepter.security.LoginFirst" />
+			<prop class="bizservice.intercepter.security.LiveSession" />
+		</object>
+		 -->
+		 
+		<!-- 服务拦截器的类别 -->
+		<category name="intercepter">
+		
+			<!-- 服务安全过滤器的类别 -->
+			<category name="security">
+
+				<!-- session管理器 -->
+				<property name="moTemplate" creator="from_this_factory" class="mo.template.Default" />
+	
+				<!-- session管理器 -->
+				<property name="sessionMan" creator="from_this_factory" class="bizservice.session.man.Default" />
+						
+				<!-- 需要先登录 -->
+				<object name="LoginFirst" class="com.bln.framework.biz.service.intercepter.LoginFirstIntercepter" activity="always_one">
+					
+					<!-- 安全对象 -->
+					<property name="bizSecurity" creator="from_this_factory" class="bizservice.BizSecurity" />
+					
+					<!-- 错误码 -->
+					<property name="errorCode" value="BS00001" />
+					
+					<!-- 错误描述 -->
+					<property name="errorDesc" value="please login first!" />
+					
+					<!-- 不需要校验的serviceid -->
+					<property name="unCheckServiceIds" creator="from_this_factory" class="bizservice.intercepter.ExcludeServiceIds" />
+					
+					<!-- 获取用户标识的KEY, 该值用在header的ext中 -->
+					<property name="useridkeyOfExtHeader" creator="from_this_factory" class="bizservice.intercepter.UseridkeyOfExtHeader" />
+
+				</object>
+
+				<!-- 需要存活的Session -->
+				<object name="LiveSession" class="com.bln.framework.biz.service.intercepter.LiveSessionIntercepter" activity="always_one">
+					
+					<!-- 错误码 -->
+					<property name="errorCode" value="BS00002" />
+					
+					<!-- 错误描述 -->
+					<property name="errorDesc" value="sessionid is time out, please login!" />
+					
+				</object>
+								
+			</category>
+			
+			<!-- 不需要登录校验的ServiceId -->
+			<object name="ExcludeServiceIds" collection_type="array" component_class="java.lang.String">
+			</object>
+			
+			<!-- 获取用户标识的KEY, 该值用在header的ext中 -->
+			<object name="UseridkeyOfExtHeader" creator="string_value" value=""/>
+		
+		</category>
+
+		<!-- 应用对象安全对象 -->
+		<object name = "BizSecurity" class="com.bln.framework.biz.security.BizSecurity" activity="always_one">
+		
+			<!-- session管理器 -->
+			<property name="sessionMan" creator="from_this_factory" class="bizservice.session.man.Default" />
+		
+		</object>
+
+		<!-- session的类别 -->
+		<category name="session">
+			
+			<object name="RemoveTimeoutSession" class="com.bln.framework.session.task.RemoveTimeoutSession" timertask_trigger= "bizservice.session.Trigger2">
+				
+				<!-- sessionMan -->
+				<property name="sessionMan" creator="from_this_factory" class="bizservice.session.man.Default" />
+							
+			</object>
+			
+			<!-- 每天2:00执行 -->
+			<object name="Trigger2" class="com.bln.framework.timertask.trigger.CronTaskTriggerBuilder">
+			
+				<!-- cron表达式 -->
+				<property name="cronExpression" value="0 0 2 ? * * " />
+																
+			</object>
+					
+			<!-- session管理器 -->
+			<category name="man" activity="always_one">
+	
+				<!-- 默认的管理器 -->
+				<object name="Default" class="com.bln.framework.session.man.SessionMan">
+		
+					<!-- 超时间隔，单位使用分钟 -->
+					<property name="timeoutDuration" value="1440" />
+					
+					<!-- session存储池 -->
+					<property name="sessionPool" creator="from_this_factory" class="bizservice.session.store.Default" />
+		
+				</object>
+	
+			</category>
+
+			<!-- session信息描述 -->
+			<category name="store">
+
+				<!-- 默认的存储对象 -->
+				<object name="Default" creator="from_this_factory" class="bizservice.session.store.MapStore">
+				</object>
+					
+				<!-- MapStore -->
+				<object name="MapStore" class="com.bln.framework.session.store.map.MapStore">
+		
+				</object>
+
+				<!-- DBStore -->
+				<object name="DBStore" class="com.bln.framework.session.store.db.DBStore">
+									
+					<!-- 表名 -->
+					<property name="tableName" value="T_FW_SESSIONINFO" />
+					
+					<!-- 连接构造器 -->					
+					<property name="connectionBuilder" creator="from_other_factory" class="PersistFactory" value="session.builder.Simple"/>
+				
+				</object>
+								
+			</category>
+						
+			<!-- session信息描述 -->
+			<category name="info">
+			
+				<!-- 默认的session信息描述 -->
+				<object name="Default" class="com.bln.framework.session.info.SessionInfo">
+		
+				</object>
+				
+			</category>
+			
+		</category>
+		
+	</category>
+	
+	<!-- 持久层工厂 -->
+	<object name="PersistFactory" creator = "factorycenter" value="persist" activity="always_one">
+	
+	</object>
+	
+</objects>
