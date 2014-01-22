@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding ="UTF-8"?>
+
+<objects name = "persist4UtilMSSQL2008" extends = "/com/bln/framework/persist/config/persist4MSSQL2008.xml">
+	
+	<!-- 数据库会话类别 -->
+	<category name="session">
+	
+		<!-- 数据库会话工厂类别 -->
+		<category name="factory">
+
+			<!-- 简单的Session工厂 -->
+			<object name="Simple" class="com.bln.framework.persist.session.factory.SessionFactory"  activity="always_one">
+	
+				<!-- session模板 -->
+				<property name="sessionTemplate" creator="from_this_factory" class="session.instance.Simple" />
+						
+			</object>
+
+			<!-- 带有权限的的Session工厂 -->
+			<object name="DataPrivilege" class="com.bln.framework.persist.session.factory.SessionFactory"  activity="always_one">
+	
+				<!-- session模板 -->
+				<property name="sessionTemplate" creator="from_this_factory" class="session.instance.DataPrivilege" />
+						
+			</object>
+						
+		</category>
+		
+	</category>
+	
+		<!-- 表的数据权限类别 -->
+	<category name="privilegelib" activity="always_one">
+	
+		<!-- 表结构对象库对象 -->
+		<object name = "Default" class = "com.bln.framework.persist.dataprivilege.lib.DataPrivilegeLib">
+		
+			<!-- 表结构配置信息 -->
+			<property name="instanceMap" collection_type="map" collection_class="org.apache.commons.collections.map.ListOrderedMap">
+								
+			</property>
+			
+		</object>
+		
+	</category>
+	
+	<!-- 表结构对象的类别 -->
+	<category name="tablestrulib">
+	
+		<!-- 表结构对象库对象 -->
+		<object name = "Default" class = "com.bln.framework.persist.tablestru.lib.TableStruLib" activity="always_one">
+		
+			<!-- 表结构配置信息 -->
+			<property name="instanceMap" collection_type="map" collection_class="org.apache.commons.collections.map.ListOrderedMap">
+				
+			</property>
+			
+		</object>
+		
+	</category>
+				
+</objects>

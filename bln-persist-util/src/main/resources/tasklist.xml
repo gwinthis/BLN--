@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<task>
+	<!-- 数据库类型-->
+	<dbms name = "MSSQL2008"/>
+	
+	<!-- 数据库连接-->
+	<dbconnection driverlass = "net.sourceforge.jtds.jdbc.Driver" 
+	connection_url = "jdbc:jtds:sqlserver://192.168.0.80:1433/guagua_vas_task" 
+	user = "sa" password = "123456"/>
+	
+	<schema name = "DBO"/>
+	
+	<!-- 表结构文档的存储位置-->
+	<tablestru_url name = "D:/"/>
+
+	<!-- 表结构文档的存储位置
+	<tablestru_url name = "D:/e/架构/服务端架构/CJFTest/src/com/bln/framework/persist/config/table"/>
+	-->
+	<!-- 版本号字段的名称-->
+	<version_column_name name = "VERSIONNO"/>
+
+	<!-- 是否自动生成序列号生成器-->
+	<auto_create_seqgenerator value = "false"/>
+	
+	<!-- 要生成的表名，一次可生成多个表，表名之间按逗号分隔，如果处理所有表设置*即可-->
+	<table name = "*"/>
+
+	<!-- 要执行的命令，该命令为生成表结构文档-->
+	<execute name = "BUILDTABLESTRU"/>
+	
+</task>
