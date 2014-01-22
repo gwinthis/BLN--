@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding ="UTF-8"?>
+
+<objects name = "bln-framework-jts-ejb2">
+
+	<category name="bizservice">
+		
+		<!-- 服务类别 -->
+		<category name="service">
+		
+			<!-- 服务装饰器类别 -->
+			<category name="decorater">
+			
+				<!-- 数据库事务类别 -->
+				<category name="transaction">
+					
+					<!-- EJB类别 -->
+					<category name="ejb">
+					
+						<!-- 事务对象 -->
+						<property name="transaction" creator="from_this_factory" class="bizservice.dbtrans.EJB" />
+							
+						<!-- 需要新的事务 -->
+						<object name="RequireNewTransaction" class="com.bln.framework.biz.service.decorater.transaction.RequireNewTransaction">
+					
+						</object>
+	
+						<!-- 需要事务 -->
+						<object name="RequireTransaction" class="com.bln.framework.biz.service.decorater.transaction.RequireTransaction">
+					
+						</object>
+						
+					</category>
+			
+				</category>
+				
+			</category>
+				
+		</category>
+	
+		<!-- 数据库事务处理的类别 -->
+		<category name="dbtrans">
+	
+			<!-- 使用EJB控制事务 -->
+			<object name="EJB" creator="ots_locater" class="bizservice.otslocator.ejb2.Local" activity="always_one" lazyLoading="true">
+	
+				<!-- 上下文原型 -->
+				<property name="contextPrototype" creator="from_this_factory" class="prototype.context.EJB" />
+	
+				<!-- 服务关键字 -->
+				<property name="serviceKey" value="ejb/TransHandlerLocal" />
+
+			</object>
+
+		</category>
+	
+	
+		<!-- 外部服务定位器的类别 -->
+		<category name="otslocator" activity="always_one">
+	
+			<!-- EJB服务 -->
+			<category name="ejb2">
+	
+				<!-- 本地服务 -->
+				<object name="Local" class="com.bln.framework.ots.locator.ejb2.local.EJBLocalServiceLocator">
+	
+				</object>
+									
+				<!-- 远程服务 -->
+				<object name="Remote" class="com.bln.framework.ots.locator.ejb2.remote.EJBRemoteServiceLocator">
+	
+				</object>
+	
+			</category>
+			
+		</category>
+	
+	</category>
+	
+	<!-- 对象原型的类别 -->
+	<category name="prototype" activity="always_one">
+
+		<!-- 服务器上下文类别 -->
+		<category name="context">
+
+			<!-- 框架所使用的配置信息对象 -->
+			<object name="EJB" class="com.bln.framework.jndi.ContextPrototype">
+
+				<!-- 上下文所使用的环境 -->
+				<property name="property" collection_type="map" collection_class="java.util.Properties">
+
+					<!-- 上下文对象工厂 -->
+					<prop name = "key" value="java.naming.factory.initial"/>
+					<prop name = "value" value = "org.jnp.interfaces.NamingContextFactory"/>
+
+					<!-- JNDI服务器的路径
+						<prop name = "java.naming.provider.url">iiop://localhost:2809/</prop>
+					-->
+					<prop name = "key" value="java.naming.provider.url"/>
+					
+					<!--<prop name = "value" value = "localhost"/>-->
+					<prop name = "value" value = "jnp://localhost:1099"/>
+
+				</property>
+
+			</object>
+
+		</category>
+
+	</category>
+	
+</objects>
