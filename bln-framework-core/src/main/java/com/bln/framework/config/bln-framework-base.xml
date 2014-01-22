@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding ="UTF-8"?>
+
+<objects name="bln-framework-base">
+
+	<!-- 应用配置对象 -->
+	<object name="AppConfig" class="com.bln.framework.config.AppConfig" activity="always_one">
+
+		<!-- 日期格式 -->
+		<property name="dateFormat" value="yyyy-MM-dd" />
+
+		<!-- 日期时间格式 -->
+		<property name="datetimeFormat" value="yyyy-MM-dd HH:mm:ss" />
+
+	</object>
+	
+	<!-- 压缩处理器的类别 -->
+	<category name="compressor" activity="always_one">
+
+		<!-- deflate压缩类型的处理器 -->
+		<object name="deflate" class="com.bln.framework.compress.type.DeflateCompressor">
+		</object>
+		
+		<!-- gzip压缩类型的处理器 -->
+		<object name="gzip" class="com.bln.framework.compress.type.GZIPCompressor">
+		</object>
+
+	</category>
+
+	<!-- 对象原型的类别 -->
+	<category name="prototype" activity="always_one">
+
+		<!-- 执行器服务对象 -->
+		<object name="ExecutorService" class="com.bln.framework.threadpool.ThreadPoolPrototype">
+
+			<!-- 线程池中线程的数量 -->
+			<property name="property" value="30" />
+
+		</object>
+
+	</category>
+	
+	<!-- 消息对象的类别 -->
+	<category name="mo">
+				
+		<!-- 消息对象的模板类别 -->
+		<category name="template">
+		
+			<!-- 默认的消息对象模板 -->
+			<object name="Default" class="com.bln.framework.mo.template.MoTemplate">
+				
+				<!-- 应用配置对象 -->
+				<property name="appConfig" creator="from_this_factory" class="AppConfig" />
+		
+				<!-- 在MO结束时是否需要删除请求节点 -->
+				<property name="removeRequestWhenEnd" value="true" />
+
+				<!-- 请求成功的值 -->
+				<property name="successValue" value="00" />
+
+				<!-- 请求失败的值 -->
+				<property name="failedValue" value="30" />
+
+			</object>
+			
+		</category>
+		
+	</category>
+		
+</objects>
