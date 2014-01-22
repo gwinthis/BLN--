@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects name="persist4Oracle" extends="/com/bln/framework/persist/config/persist.xml">
+
+	<!-- sqldialect的类别 -->
+	<category name="sqldialect">
+
+		<!-- 默认的SQL方言对象 -->
+		<object name="Default" creator="from_this_factory" class="sqldialect.Oracle" activity="always_one">
+		</object>
+		
+	</category>
+
+	<!-- 生成器的类别 -->
+	<category name="valgenerator">
+
+		<!-- 生成器库类别 -->
+		<category name="lib">
+
+			<!-- 默认的库对象 -->
+			<object name="Default" creator="from_this_factory" class="valgenerator.lib.Oracle" activity="always_one">
+			</object>
+
+		</category>
+
+	</category>
+
+</objects>

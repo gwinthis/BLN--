@@ -1,0 +1,683 @@
+<?xml version="1.0" encoding ="UTF-8"?>
+
+<objects name = "persist">
+	
+	<!-- 表的数据权限类别 -->
+	<category name="privilegelib" activity="always_one">
+
+		<!-- 表结构对象库对象 -->
+		<object name="Default" class="com.bln.framework.persist.dataprivilege.lib.DataPrivilegeLib">
+
+		</object>
+
+	</category>
+	
+	<!-- 表结构对象的类别 -->
+	<category name="tablestrulib">
+
+		<!-- 表结构对象库对象 -->
+		<object name="Default" class="com.bln.framework.persist.tablestru.lib.TableStruLib" activity="always_one">
+			<!-- 表结构配置信息 -->
+			<property name="instanceMap" creator = "from_package" class = "tablestru.builder.TableBuilder" value = "com.bln.framework.persist.config.table"/>
+		</object>
+
+	</category>
+	
+	<!-- 数据库会话类别 -->
+	<category name="session">
+
+		<!-- 数据库会话工厂类别 -->
+		<category name="factory">
+
+			<!-- Session关键字所对应的SessionBuilder的配置信息 -->
+			<property name="keySessionBuilderMap" collection_type="map" collection_class="java.util.HashMap">
+
+				<prop name="key" creator="null_value"/>
+				<prop name="value" creator="from_this_factory" class="session.builder.Default"/>
+
+			</property>
+			
+			<!-- 简单的Session工厂 -->
+			<object name="Simple" class="com.bln.framework.persist.session.factory.SessionFactory" activity="always_one">
+
+				<!-- session模板 -->
+				<property name="sessionTemplate" creator="from_this_factory" class="session.instance.Simple"/>
+
+			</object>
+
+			<!-- 带数据权限的Session工厂 -->
+			<object name="DataPrivilege" class="com.bln.framework.persist.session.factory.SessionFactory" activity="always_one">
+
+				<!-- session模板 -->
+				<property name="sessionTemplate" creator="from_this_factory" class="session.instance.DataPrivilege"/>
+
+			</object>
+			
+		</category>
+
+		<!-- Session构造器的类别 -->
+		<category name="builder" activity="always_one">
+
+			<!-- session模板，默认使用无数据权限的session模板 -->
+			<property name="sessionTemplate" creator="from_this_factory" class="session.instance.Simple"/>
+
+			<!-- Default数据源 -->
+			<object name="Default" class="com.bln.framework.persist.session.builder.datasource.SessionBuilder4DataSource"/>
+			
+		</category>
+				
+		<!-- 实例类别 -->
+		<category name="instance">
+
+			<!-- 表更新执行器库 -->
+			<property name="tableUpdateExecutorLib" creator="from_this_factory" class="session.executor.TableUpdateExecutorLib" />
+
+			<!-- 视图执行器 -->
+			<property name="viewExecutor" creator="from_this_factory" class="session.executor.object.View" />
+
+			<!-- 更新执行器 -->
+			<property name="updateExecutor" creator="from_this_factory" class="session.executor.object.Update" />
+
+			<!-- 存储过程执行器 -->
+			<property name="spExecutor" creator="from_this_factory" class="session.executor.object.StoreProcedure" />
+
+			<!-- 简单的数据库会话对象 -->
+			<object name="Simple" class="com.bln.framework.persist.session.Session">
+			
+				<!-- 表查询执行器库 -->
+				<property name="tableQueryExecutorLib" creator="from_this_factory" class="session.executor.TableQueryExecutorLib" />
+	
+			</object>
+	
+			<!-- 带有数据权限的数据库会话对象 -->
+			<object name="DataPrivilege" class="com.bln.framework.persist.session.Session">
+			
+				<!-- 表查询执行器库 -->
+				<property name="tableQueryExecutorLib" creator="from_this_factory" class="session.executor.dataprivilege.TableQueryExecutorLib" />
+					
+			</object>
+			
+		</category>
+				
+		<!-- 数据库会话执行器类别 -->
+		<category name="executor">
+			
+			<!-- 表的查询执行器库对象 -->
+			<object name = "TableQueryExecutorLib" class = "com.bln.framework.persist.session.executor.row.table.query.lib.TableQueryExecutorLib">
+	
+				<!-- 表结构库 -->
+				<property name="tableStruLib" creator="from_this_factory" class="tablestrulib.Default" />
+				
+				<!-- 实例构造器 -->
+				<property name="instanceBuilder" creator="from_this_factory" class="session.executor.builder.TableQueryExecutorBuilder" />
+
+			</object>
+			
+			<!-- 表的更新执行器库对象 -->
+			<object name = "TableUpdateExecutorLib" class = "com.bln.framework.persist.session.executor.row.table.update.lib.TableUpdateExecutorLib">
+	
+				<!-- 表结构库 -->
+				<property name="tableStruLib" creator="from_this_factory" class="tablestrulib.Default" />
+				
+				<!-- 实例构造器 -->
+				<property name="instanceBuilder" creator="from_this_factory" class="session.executor.builder.TableUpdateExecutorBuilder" />
+								
+			</object>
+			
+			<!-- TableExecutor构造器的类别 -->
+			<category name="builder" activity="always_one">
+	
+				<!-- SQL模板库 -->
+				<property name="sqltLib" creator="from_this_factory" class="sqltemplate.SqltLib" />
+	
+				<!-- 值生成库 -->
+				<property name="valGeneratorLib" creator="from_this_factory" class="valgenerator.lib.Default" />
+	
+				<!-- TableQueryExecutor对象生成器 -->
+				<object name="TableQueryExecutorBuilder" class="com.bln.framework.persist.session.executor.row.table.builder.TableExecutorBuilder">
+					
+					<!-- 模板 -->
+					<property name="tsTemplate" creator="from_this_factory" class="session.executor.object.TableQuery" />
+						
+				</object>
+	
+				<!-- TableUpdateExecutor对象生成器 -->
+				<object name="TableUpdateExecutorBuilder" class="com.bln.framework.persist.session.executor.row.table.builder.TableExecutorBuilder">
+					
+					<!-- 模板 -->
+					<property name="tsTemplate" creator="from_this_factory" class="session.executor.object.TableUpdate" />
+						
+				</object>
+				
+			</category>
+			
+			<!-- 带有数据权限执行器的类别 -->
+			<category name="dataprivilege">
+
+				<!-- 带数据权限的表查询执行器库对象 -->
+				<object name = "TableQueryExecutorLib" class = "com.bln.framework.persist.session.executor.row.table.query.lib.TableQueryExecutorLib" activity="always_one">
+		
+					<!-- 表结构库 -->
+					<property name="tableStruLib" creator="from_this_factory" class="tablestrulib.Default" />
+					
+					<!-- 实例构造器 -->
+					<property name="instanceBuilder" creator="from_this_factory" class="session.executor.dataprivilege.builder.TableQueryExecutorWithDpBuilder" />
+	
+				</object>
+			
+				<!-- TableQueryExecutorWithDp对象 -->
+				<object name="TableQueryExecutorWithDp" class="com.bln.framework.persist.session.executor.row.table.query.dp.TableQueryExecutorWithDp">
+											
+				</object>
+			
+				<!-- 数据权限执行器构造器的类别 -->
+				<category name="builder" activity="always_one">
+		
+					<!-- TableQueryExecutor对象生成器 -->
+					<object name="TableQueryExecutorWithDpBuilder" class="com.bln.framework.persist.session.executor.row.table.query.dp.builder.TableExecutorWithDpBuilder">
+							
+						<!-- 数据权限库 -->
+						<property name="dpLib" creator="from_this_factory" class="privilegelib.Default" />
+			
+						<!-- 模板对象 -->
+						<property name="tableExecutorWithDp" creator="from_this_factory" class="session.executor.dataprivilege.TableQueryExecutorWithDp" />
+						
+						<!-- 执行器库 -->
+						<property name="tableExecutorLib" creator="from_this_factory" class="session.executor.TableQueryExecutorLib" />
+		
+					</object>
+	
+				</category>
+				
+			</category>
+			
+			<!-- 数据会话执行器对象类别 -->
+			<category name="object">
+
+				<!-- 转换工具特性 -->
+				<property name="converterUtil" creator="from_this_factory" class="converter.Util" />
+	
+				<!-- 数据库方言特性 -->
+				<property name="sqlDialect" creator="from_this_factory" class="sqldialect.Default" />
+				
+				<!-- 值生成库 -->
+				<property name="valGeneratorLib" creator="from_this_factory" class="valgenerator.lib.Default" />
+	
+				<!-- JDBC访问模板特性 -->
+				<property name="jdbcTemplate" creator="from_this_factory" class="jdbctemplate.JdbcTemplate4IRow" />
+			
+				<!-- 表查询执行器对象 -->
+				<object name = "TableQuery" class = "com.bln.framework.persist.session.executor.row.table.query.TableQueryExecutor">
+				</object>
+				
+				<!-- 表更新执行器对象 -->
+				<object name = "TableUpdate" class = "com.bln.framework.persist.session.executor.row.table.update.TableUpdateExecutor">
+									 
+					<!-- 监听器 -->
+					<property name="listener" creator="from_this_factory" class="session.executor.listener.TableUpdate" />
+				
+				</object>
+				
+				<!-- 视图执行器对象 -->
+				<object name = "View" class = "com.bln.framework.persist.session.executor.row.view.ViewExecutor"/>
+
+				<!-- 视图执行器对象 -->
+				<object name = "Update" class = "com.bln.framework.persist.session.executor.row.update.UpdateExecutor"/>
+				
+				<!-- 存储过程执行器对象 -->
+				<object name = "StoreProcedure" class = "com.bln.framework.persist.session.executor.row.sp.StoreProcedureExecutor"/>
+
+			</category>
+			
+			<!-- 数据会话执行器监听器类别 -->
+			<category name="listener">
+			
+				<!-- 表更新执行器监听器对象 -->
+				<object name = "TableUpdate" creator="null_value">
+				</object>
+							
+			</category>
+			
+		</category>
+		
+	</category>
+	
+
+	<!-- SQL模板的类别 -->
+	<category name="sqltemplate">
+	
+		<!-- 数据库方言特性 -->
+		<property name="sqlDialect" creator="from_this_factory" class="sqldialect.Default" />
+
+		<!-- 表结构对象库对象 -->
+		<object name = "SqltLib" class = "com.bln.framework.persist.sql.template.lib.SqltLib" activity="always_one">
+
+			<!-- 表结构库 -->
+			<property name="tableStruLib" creator="from_this_factory" class="tablestrulib.Default" />
+			
+			<!-- 实例构造器 -->
+			<property name="instanceBuilder" creator="from_this_factory" class="sqltemplate.builder.SqlTBuilder" />
+			
+		</object>
+		
+		<!-- SQL模板对象的类别 -->
+		<category name="type">
+
+			<!-- 默认的SQL模板对象 -->
+			<object name="Default" class="com.bln.framework.persist.sql.template.SQLTemplate">
+				
+				<!-- 转换工具特性 -->
+				<property name="converterUtil" creator="from_this_factory" class="converter.Util" />
+				
+			</object>
+			
+		</category>
+		
+		<!-- SQL模板构造器的类别 -->
+		<category name="builder" activity="always_one">
+			
+			<!-- 表结构对象生成器 -->
+			<object name="SqlTBuilder" class="com.bln.framework.persist.sql.template.builder.SqlTBuilder">
+
+				<!-- sqlt模板 -->
+				<property name="sqlt" creator="from_this_factory" class="sqltemplate.type.Default" />
+						
+				<!-- sql语句生成器，可以为多个 -->
+				<property name="sqlBuilders" collection_type="array" component_creator="from_this_factory" component_class="com.bln.framework.persist.sql.template.builder.sql.ISqlBuilder">
+	
+					<!-- deleteSql生成器 -->
+					<prop class="sqltemplate.builder.sql.DeleteBuilder" />
+	
+					<!-- insertSql生成器 -->
+					<prop class="sqltemplate.builder.sql.InsertBuilder" />
+
+					<!-- selectSql生成器 -->
+					<prop class="sqltemplate.builder.sql.SelectBuilder" />
+
+					<!-- updateSql生成器 -->
+					<prop class="sqltemplate.builder.sql.UpdateBuilder" />
+	
+				</property>	
+			
+			</object>
+			
+			<!-- SQL语句构造器的类别 -->
+			<category name="sql" activity="always_one">
+			
+				<!-- 值生成库 -->
+				<property name="valGeneratorLib" creator="from_this_factory" class="valgenerator.lib.Default" />
+				
+				<!-- deleteSql生成器 -->
+				<object name="DeleteBuilder" class="com.bln.framework.persist.sql.template.builder.sql.delete.DeleteBuilder">	
+					
+					<!-- sql类型 -->
+					<property name="sqlType" value="deleteSql" />
+	
+				</object>
+				
+				<!-- insertSql生成器 -->
+				<object name="InsertBuilder" class="com.bln.framework.persist.sql.template.builder.sql.insert.InsertBuilder">	
+					
+					<!-- sql类型 -->
+					<property name="sqlType" value="insertSql" />
+				
+				</object>
+				
+				<!-- selectSql生成器 -->
+				<object name="SelectBuilder" class="com.bln.framework.persist.sql.template.builder.sql.select.SelectBuilder">	
+					
+					<!-- sql类型 -->
+					<property name="sqlType" value="selectSql" />
+				
+				</object>
+				
+				<!-- updateSql生成器 -->
+				<object name="UpdateBuilder" class="com.bln.framework.persist.sql.template.builder.sql.update.UpdateBuilder">
+					
+					<!-- sql类型 -->
+					<property name="sqlType" value="updateSql" />
+					
+				</object>
+				
+			</category>
+			
+		</category>
+				
+	</category>
+	
+	<!-- 表结构对象的类别 -->
+	<category name="tablestru">
+	
+		<!-- 构造器的类别 -->
+		<category name="builder" activity="always_one">
+		
+			<!-- 表结构对象生成器 -->
+			<object name="TableBuilder" class="com.bln.framework.persist.tablestru.builder.table.TableBuilder">
+				
+				<!-- 表结构配置对象 -->
+				<property name="tableStruConfig" creator="from_this_factory" class="tablestru.config.Xml" />
+	
+				<!-- 表结构组件生成器，可以为多个 -->
+				<property name="componentBuilders" collection_type="array" component_creator="from_this_factory" component_class="com.bln.framework.persist.tablestru.builder.ITableComponentBuilder">
+	
+					<!-- 字段组件生成器 -->
+					<prop class="tablestru.builder.AllColumnsComponentBuilder" />
+	
+					<!-- 主键组件生成器 -->
+					<prop class="tablestru.builder.IdsComponentBuilder" />
+
+					<!-- 版本控制组件生成器 -->
+					<prop class="tablestru.builder.VerColComponentBuilder" />
+
+					<!-- 外键组件生成器 -->
+					<prop class="tablestru.builder.FksColComponentBuilder" />
+	
+				</property>	
+			
+			</object>
+						
+			<!-- 字段组件生成器 -->
+			<object name="AllColumnsComponentBuilder" class="com.bln.framework.persist.tablestru.builder.columns.AllColumnsComponentBuilder">	
+			</object>
+			
+			<!-- 主键组件生成器 -->
+			<object name="IdsComponentBuilder" class="com.bln.framework.persist.tablestru.builder.columns.ids.IdsComponentBuilder">	
+			</object>
+			
+			<!-- 版本控制组件生成器 -->
+			<object name="VerColComponentBuilder" class="com.bln.framework.persist.tablestru.builder.columns.vercol.VerColComponentBuilder">	
+			</object>
+			
+			<!-- 外键组件生成器 -->
+			<object name="FksColComponentBuilder" class="com.bln.framework.persist.tablestru.builder.fks.FksColComponentBuilder">	
+			</object>
+			
+		</category>
+		
+		<!-- 配置信息的类别 -->
+		<category name="config">
+		
+			<!-- XML类型的配置对象 -->
+			<object name="Xml" class="com.bln.framework.persist.tablestru.config.xml.TableStruXmlConfig">	
+			</object>
+			
+		</category>
+		
+	</category>
+			
+	<!-- sqldialect的类别 -->
+	<category name="sqldialect">
+
+		<!-- 默认的SQL方言对象 -->
+		<object name="Default" creator="from_this_factory" class="sqldialect.Oracle">
+		</object>
+		
+		<!-- Oracle的sqldialect对象 -->
+		<object name="Oracle" class="com.bln.framework.persist.sql.dialect.oracle.OralceDialect">
+		</object>
+
+		<!-- DB2的sqldialect对象 -->
+		<object name="DB2" class="com.bln.framework.persist.sql.dialect.db2.DB2Dialect">
+		</object>
+
+		<!-- DB2的sqldialect对象 -->
+		<object name="MSSQL2008" class="com.bln.framework.persist.sql.dialect.mssql2008.MSSQL2008Dialect">
+		</object>
+		
+	</category>
+	
+	<!-- 工具箱的类别 -->
+	<category name="util" activity="always_one">
+
+		<!-- SQL实体工具 -->
+		<object name="SqlEntityUtils" class="com.bln.framework.persist.sql.entity.util.SqlEntityUtils">
+			
+			<!-- 表结构库 -->
+			<property name="tableStruLib" creator="from_this_factory" class="tablestrulib.Default" />
+		
+		</object>
+
+	</category>
+	
+	
+	<!-- 生成器的类别 -->
+	<category name="valgenerator">
+
+		<!-- 生成器库类别 -->
+		<category name="lib">
+
+			<!-- 默认的库对象 -->
+			<object name="Default" creator="from_this_factory" class="valgenerator.lib.Oracle">
+			</object>
+			
+			<!-- Oracle的库类别 -->
+			<object name="Oracle" class="com.bln.framework.persist.valgenerator.lib.ColValGeneratorLib">
+	
+				<!-- 生成器 -->
+				<property name="instanceMap" collection_type="map" collection_class="java.util.HashMap">
+
+					<!-- sequence生成器对象 -->
+					<prop name = "key" value="sequence"/>
+					<prop name = "value" creator="from_this_factory" class = "valgenerator.type.sequence.Oracle"/>
+
+					<!-- sequence生成器对象 -->
+					<prop name = "key" value="numeric_version"/>
+					<prop name = "value" creator="from_this_factory" class = "valgenerator.type.version.NumericVersionGenerator"/>
+
+					<!-- sequence生成器对象 -->
+					<prop name = "key" value="timestamp_version"/>
+					<prop name = "value" creator="from_this_factory" class = "valgenerator.type.version.TimestampVersionGenerator"/>
+
+
+				</property>	
+						
+			</object>
+
+			<!-- DB2的库类别 -->
+			<object name="DB2" class="com.bln.framework.persist.valgenerator.lib.ColValGeneratorLib">
+	
+				<!-- 生成器 -->
+				<property name="instanceMap" collection_type="map" collection_class="java.util.HashMap">
+
+					<!-- sequence生成器对象 -->
+					<prop name = "key" value="sequence"/>
+					<prop name = "value" creator="from_this_factory" class = "valgenerator.type.sequence.DB2"/>
+
+					<!-- sequence生成器对象 -->
+					<prop name = "key" value="numeric_version"/>
+					<prop name = "value" creator="from_this_factory" class = "valgenerator.type.version.NumericVersionGenerator"/>
+
+					<!-- sequence生成器对象 -->
+					<prop name = "key" value="timestamp_version"/>
+					<prop name = "value" creator="from_this_factory" class = "valgenerator.type.version.TimestampVersionGenerator"/>
+
+
+				</property>	
+						
+			</object>
+
+			<!-- MSSQL2008的库类别 -->
+			<object name="MSSQL2008" class="com.bln.framework.persist.valgenerator.lib.ColValGeneratorLib">
+	
+				<!-- 生成器 -->
+				<property name="instanceMap" collection_type="map" collection_class="java.util.HashMap">
+
+					<!-- sequence生成器对象 -->
+					<prop name = "key" value="numeric_version"/>
+					<prop name = "value" creator="from_this_factory" class = "valgenerator.type.version.NumericVersionGenerator"/>
+
+					<!-- sequence生成器对象 -->
+					<prop name = "key" value="timestamp_version"/>
+					<prop name = "value" creator="from_this_factory" class = "valgenerator.type.version.TimestampVersionGenerator"/>
+
+
+				</property>	
+						
+			</object>
+									
+		</category>
+
+		<!-- 生成器类别 -->
+		<category name="type">
+		
+			<!-- sequence的生成器类别 -->
+			<category name="sequence">
+
+				<!-- 支持字段的值通过数据库函数生成 -->
+				<property name="surportColValWithDbFun" value="true" />
+									
+				<!-- JDBC访问模板特性 -->
+				<property name="jdbcTemplate" creator="from_this_factory" class="jdbctemplate.JdbcTemplate4IRow" />
+			
+				<!-- Oracle的sequence -->
+				<object name="Oracle" class="com.bln.framework.persist.valgenerator.sequence.oracle.SeqenceGeneratorOrcl">
+				</object>
+
+				<!-- DB2的sequence -->
+				<object name="DB2" class="com.bln.framework.persist.valgenerator.sequence.db2.SeqenceGeneratorDB2">
+				</object>
+								
+			</category>
+			
+			<!-- 版本号的生成器类别 -->
+			<category name="version">
+				
+				<!-- 数值类型的版本号的生成器对象 -->
+				<object name="NumericVersionGenerator" class="com.bln.framework.persist.valgenerator.version.NumericVersionGenerator">
+
+					<!-- 支持字段的值通过数据库函数生成 -->
+					<property name="surportColValWithDbFun" value="true" />
+									
+				</object>
+				
+				<!-- 时间戳类型的版本号的生成器对象 -->
+				<object name="TimestampVersionGenerator" class="com.bln.framework.persist.valgenerator.version.TimestampVersionGenerator">
+
+					<!-- 支持字段的值通过数据库函数生成,该字段值取应用服务器的时间，所以不支持函数生成 -->
+					<property name="surportColValWithDbFun" value="false" />
+									
+				</object>
+
+			</category>
+			
+		</category>
+	
+	</category>
+	
+	<!-- jdbctemplate的类别 -->
+	<category name="jdbctemplate" activity="always_one">
+
+		<!-- 默认的jdbctemplate对象 -->
+		<object name="JdbcTemplate4IRow" class="com.bln.framework.persist.jdbc.template.JdbcTemplate4IRow">
+
+			<!-- 转换工具特性 -->
+			<property name="converterUtil" creator="from_this_factory" class="converter.Util" />
+
+		</object>
+
+	</category>
+
+	<!-- 转换器的类别 -->
+	<category name="converter" activity="always_one">
+
+		<!-- 工具箱对象 -->
+		<object name="Util" class="com.bln.framework.persist.jdbc.converter.util.ConverterUtil">
+
+			<!-- 转换器工厂对象 -->
+			<property name="convertFactory" creator="from_this_factory" class="converter.factory.Default" />
+
+		</object>
+					
+		
+		<!-- 转换器工厂的类别 -->
+		<category name="factory">
+			
+			<!-- 默认的转换器工厂对象 -->
+			<object name="Default" creator="from_this_factory" class="converter.factory.Integrate">
+			</object>
+			
+			<!-- 集成的转换器工厂对象 -->
+			<object name="Integrate" class="com.bln.framework.persist.jdbc.converter.factory.ConverterFactoryIntegrate" activity="always_one">
+	
+				<!-- 字符类型的转换器对象 -->
+				<property name="charConverter" creator="from_this_factory" class="converter.type.CharConverter" />
+
+				<!-- 数值类型的转换器对象 -->
+				<property name="numberConverter" creator="from_this_factory" class="converter.type.NumberConverter" />
+
+				<!-- 日期类型的转换器对象 -->
+				<property name="dateConverter" creator="from_this_factory" class="converter.type.date.DateConverter" />
+
+				<!-- 时间戳类型的转换器对象 -->
+				<property name="timestampConverter" creator="from_this_factory" class="converter.type.date.TimestampConverter" />
+
+				<!-- BLOB类型的转换器对象 -->
+				<property name="blobConverter" creator="from_this_factory" class="converter.type.BlobConverter" />
+				
+			</object>
+			
+		</category>
+
+		<!-- 转换器类别 -->
+		<category name="type">
+			
+			<!-- Char类型的Converter -->
+			<object name="CharConverter" class="com.bln.framework.persist.jdbc.converter.CharConverter">
+			</object>
+			
+			<!-- Number类型的Converter -->
+			<object name="NumberConverter" class="com.bln.framework.persist.jdbc.converter.NumberConverter">
+			</object>
+			
+			<!-- 日期类型的Converter类别 -->
+			<category name="date">
+			
+				<!-- Date类型的Converter -->
+				<object name="DateConverter" class="com.bln.framework.persist.jdbc.converter.DateConverter">					
+					<!-- 日期时间格式，可以为多个 -->
+					<property name="dateFormats" collection_type="array" component_class="java.lang.String">
+		
+						<!-- 日期时间全格式 -->
+						<prop value="yyyy-MM-dd HH:mm:ss" />
+		
+						<!-- 日期时间到分钟 -->
+						<prop value="yyyy-MM-dd HH:mm" />
+						
+						<!-- 日期 -->
+						<prop value="yyyy-MM-dd" />
+			
+					</property>
+				</object>
+
+				<!-- Timestamp类型的Converter -->
+				<object name="TimestampConverter" class="com.bln.framework.persist.jdbc.converter.TimestampConverter">		
+					<!-- 日期时间格式，可以为多个 -->
+					<property name="dateFormats" collection_type="array" component_class="java.lang.String">
+
+						<!-- 日期时间 -->
+						<prop value="yyyy-MM-dd HH:mm:ss" />
+
+						<!-- 日期时间到分钟 -->
+						<prop value="yyyy-MM-dd HH:mm" />
+						
+						<!-- 日期 -->
+						<prop value="yyyy-MM-dd" />
+		
+						<!-- 日期时间全格式 -->
+						<prop value="yyyy-MM-dd HH:mm:ss.SSS" />
+		
+			
+					</property>
+				</object>
+			
+			</category>
+			
+			<!-- Blob类型的Converter -->
+			<object name="BlobConverter" class="com.bln.framework.persist.jdbc.converter.BlobConverter">
+			</object>
+							
+		</category>
+	
+	</category>
+
+</objects>

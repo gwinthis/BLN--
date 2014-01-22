@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects name="persist4MSSQL2008" extends="/com/bln/framework/persist/config/persist.xml">
+
+	<!-- sqldialect的类别 -->
+	<category name="sqldialect">
+	
+		<property name = "prefixChar" value="["/>
+		<property name = "suffixChar" value="]"/>
+
+		<!-- 默认的SQL方言对象 -->
+		<object name="Default" creator="from_this_factory" class="sqldialect.MSSQL2008" activity="always_one">
+		</object>
+
+	</category>
+
+	<!-- 生成器的类别 -->
+	<category name="valgenerator">
+
+		<!-- 生成器库类别 -->
+		<category name="lib">
+
+			<!-- 默认的库对象 -->
+			<object name="Default" creator="from_this_factory" class="valgenerator.lib.MSSQL2008" activity="always_one">
+			</object>
+
+		</category>
+
+		<!-- 生成器类别 -->
+		<category name="type">
+		
+			<!-- 版本号的生成器类别 -->
+			<category name="version">
+				
+				<!-- 数值类型的版本号的生成器对象 -->
+				<object name="NumericVersionGenerator" class="com.bln.framework.persist.valgenerator.version.NumericVersionGenerator">
+
+					<!-- 支持字段的值通过数据库函数生成 -->
+					<property name="surportColValWithDbFun" value="false" />
+									
+				</object>
+			</category>
+			
+		</category>
+		
+	</category>
+
+</objects>
