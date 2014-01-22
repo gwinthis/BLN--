@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding ="UTF-8"?>
+
+<objects name = "bln-framework-clientmo">
+
+	<!-- 消息对象的类别 -->
+	<category name="mo">
+	
+		<!-- 消息对象的类型 -->
+		<category name="type">
+		
+			<!-- 使用Map存储的消息对象 -->
+			<object name="Map" class="com.bln.framework.mo.type.map.MapMo" />
+	
+			<!-- 使用clientXml存储的消息对象 -->
+			<object name="ClientXml" class="com.bln.framework.mo.type.edi.client.ClientMo">
+	
+				<!-- 报文对象 -->
+				<property name="ediFileStru" creator="from_this_factory" class="edi.stru.ClientXmlEdi" />
+	
+			</object>
+
+			<!-- 使用clientJson存储的消息对象 -->
+			<object name="ClientJson" class="com.bln.framework.mo.type.edi.client.ClientMo">
+	
+				<!-- 报文对象 -->
+				<property name="ediFileStru" creator="from_this_factory" class="edi.stru.ClientJsonEdi" />
+	
+			</object>
+							
+		</category>
+		
+	</category>
+	
+	<!-- ========================@EDI解析层所使用的对象 ========================-->
+	<category name="edi">
+	
+		<!-- EDI格式类别 -->
+		<category name="stru">
+		
+			<!-- 字符集编码 -->
+			<property name="encoding" value="UTF-8" />
+			
+			<!-- XML类型的客户端报文格式 -->
+			<object name="ClientXmlEdi" class="com.bln.framework.edi.stru.client.xml.ClientXMLFileStru">	
+			</object>
+
+			<!-- JSON类型的客户端报文格式 -->
+			<object name="ClientJsonEdi" class="com.bln.framework.edi.stru.client.json.ClientJSONFileStru">	
+			</object>
+				
+		</category>
+	
+		<!-- 消息对象构造器类别 -->
+		<category name="mobuilder" activity="always_one">
+	
+			<!-- MAP类型消息对象构造器类别 -->
+			<category name="mapmo">
+
+				<!-- 消息对象的类别 -->
+				<property name="mo" creator="from_this_factory" class="mo.type.Map" />
+	
+				<!-- 通过XML客户端报文生成消息对象的构造器 -->
+				<object name="ClientXmlEdi" class="com.bln.framework.mo.type.map.builder.edi.MapMOBuilderByEdi">
+	
+					<!-- 报文类型为XML类型的客户端报文 -->
+					<property name="buildMOable" creator="from_this_factory" class="edi.stru.ClientXmlEdi" />
+	
+				</object>
+
+				<!-- 通过JSON客户端报文生成消息对象的构造器 -->
+				<object name="ClientJsonEdi" class="com.bln.framework.mo.type.map.builder.edi.MapMOBuilderByEdi">
+	
+					<!-- 报文类型为JSON类型的客户端报文 -->
+					<property name="buildMOable" creator="from_this_factory" class="edi.stru.ClientJsonEdi" />
+	
+				</object>
+					
+			</category>
+	
+			<!-- ClientXml类型消息对象构造器类别 -->
+			<category name="clientxmlmo">
+	
+				<!-- 通过客户端报文生成消息对象的构造器 -->
+				<object name="ClientXmlEdi" class="com.bln.framework.mo.type.edi.builder.EDIMoBuilder">
+	
+					<!-- 消息对象的类别 -->
+					<property name="mo" creator="from_this_factory" class="mo.type.ClientXml" />
+	
+				</object>
+	
+			</category>
+
+			<!-- ClientXml类型消息对象构造器类别 -->
+			<category name="clientjsonmo">
+	
+				<!-- 通过客户端报文生成消息对象的构造器 -->
+				<object name="ClientJsonEdi" class="com.bln.framework.mo.type.edi.builder.EDIMoBuilder">
+	
+					<!-- 消息对象的类别 -->
+					<property name="mo" creator="from_this_factory" class="mo.type.ClientJson" />
+	
+				</object>
+	
+			</category>
+				
+		</category>
+	
+	
+		<!-- 文件对象构造器类别 -->
+		<category name="filebuilder" activity="always_one">
+	
+			<!-- 客户端报文构造器 -->
+			<object name="ByClientMo" class="com.bln.framework.edi.stru.client.builder.clientmo.ClientFileBuilderByClientMO">
+
+			</object>
+	
+			<!-- 通过IMessageObject生成文件对象的构造器类别 -->
+			<category name="bycommonmo">
+	
+				<!-- 客户端Xml报文构造器 -->
+				<object name="ClientXmlEdi" class="com.bln.framework.edi.stru.client.builder.commonmo.ClientFileBuilderByCommonMO">
+	
+					<!-- 报文类型为客户端报文 -->
+					<property name="fileBuildable" creator="from_this_factory" class="edi.stru.ClientXmlEdi" />
+	
+				</object>
+
+				<!-- 客户端JSON报文构造器 -->
+				<object name="ClientJsonEdi" class="com.bln.framework.edi.stru.client.builder.commonmo.ClientFileBuilderByCommonMO">
+	
+					<!-- 报文类型为客户端报文 -->
+					<property name="fileBuildable" creator="from_this_factory" class="edi.stru.ClientJsonEdi" />
+	
+				</object>
+					
+			</category>
+	
+		</category>
+	
+	</category>
+
+</objects>
