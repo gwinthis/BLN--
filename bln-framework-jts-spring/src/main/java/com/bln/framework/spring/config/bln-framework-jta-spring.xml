@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding ="UTF-8"?>
+
+<!-- ========================@业务服务层对象 ========================-->
+<objects name = "bln-framework-jts-spring">
+
+	<category name="bizservice">
+
+		<!-- 服务类别 -->
+		<category name="service">
+
+			<!-- 服务装饰器类别 -->
+			<category name="decorater">
+			
+				<!-- 数据库事务类别 -->
+				<category name="transaction">
+				
+					<!-- Spring类别 -->
+					<category name="spring">
+					
+						<!-- 事务对象 -->
+						<property name="transaction" creator="from_this_factory" class="bizservice.dbtrans.Spring" />
+							
+						<!-- 需要新的事务 -->
+						<object name="RequireNewTransaction" class="com.bln.framework.biz.service.decorater.transaction.RequireNewTransaction">
+					
+						</object>
+	
+						<!-- 需要事务 -->
+						<object name="RequireTransaction" class="com.bln.framework.biz.service.decorater.transaction.RequireTransaction">
+					
+						</object>
+						
+					</category>
+					
+				</category>
+										
+			</category>
+				
+		</category>
+
+		<!-- 数据库事务处理的类别 -->
+		<category name="dbtrans">
+	
+			<!-- 使用Spring控制事务 -->
+			<object name="Spring" creator="ots_locater" class="bizservice.otslocator.spring.TransHandler" activity="always_one">
+	
+				<!-- Spring工厂的配置文件路径 -->
+				<property name="contextUrl" value="/com/bln/framework/spring/config/applicationContext.xml" />
+	
+				<!-- 事务处理对象在Spring工厂中的名称 -->
+				<property name="serviceKey" value="transactionHandler" />
+	
+			</object>	
+		</category>
+	
+	
+		<!-- 外部服务定位器的类别 -->
+		<category name="otslocator" activity="always_one">
+	
+			<!-- spring的事务服务对象 -->
+			<category name="spring">
+	
+				<!-- 本地服务 -->
+				<object name="TransHandler" class="com.bln.framework.ots.locator.spring.SpringTransLocator">
+		
+				</object>
+									
+			</category>
+	
+		</category>
+	</category>
+	
+</objects>
