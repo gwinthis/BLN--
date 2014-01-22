@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding ="UTF-8"?>
+
+<!-- ========================@数据实体业务模型 ========================-->
+<objects name="bln-framework-bizmodule-entity">
+
+	<!-- 业务模型类别 -->
+	<category name="bizmodule">
+	
+		<!-- 表的查询执行器库对象 -->
+		<object name = "EntityLib" class = "com.bln.framework.biz.module.entity.lib.EntityLib" activity="always_one">
+			<!-- 表结构库 -->
+			<property name="tableStruLib" creator="from_other_factory" class = "PersistFactory" value="tablestrulib.Default" />
+
+			<!-- 表结构配置信息 -->
+			<property name="instanceMap" creator = "from_package" value = "com.bln.framework.persist.config.table">
+				
+				<!-- 通用配置 -->
+				<prop name="common" creator="from_this_factory" class="bizmodule.entity.instance.Simple" />
+				
+			</property>
+		</object>
+		
+		<!-- 表实体类别 -->
+		<category name="entity">
+					
+			<!-- 表实体实例 -->
+			<category name="instance">
+	
+				<!-- 简单的数据库Session工厂 -->
+				<property name="sessionFactory" creator="from_other_factory" class="PersistFactory" value="session.factory.Simple"/>
+	
+				<!-- 表结构库-->
+				<property name="tableStruLib" creator="from_other_factory" class="PersistFactory" value="tablestrulib.Default"/>
+
+				<!-- SQL实体工具-->
+				<property name="sqlEntityUtils" creator="from_other_factory" class="PersistFactory" value="util.SqlEntityUtils"/>
+	 			
+				<!-- 实例构造器 -->
+				<property name="sessionStrategy" creator="from_this_factory" class="bizmodule.entity.strategy.session.Default" />
+	
+				<!-- 条件解析器 -->
+				<property name="parseCondition" creator="from_this_factory" class="bizmodule.parsecondition.ParseCondition" />
+	
+				<!-- 鉴别行状态策略 -->
+				<property name="identifyRowStatus" creator="from_this_factory" class="bizmodule.entity.strategy.rowstatus.Default" />
+	
+				<!-- 简单的无状态实体对象 -->
+				<object name="Simple" class="com.bln.framework.biz.module.entity.EntityStatelessModule">
+			
+				</object>
+				
+			</category>
+	
+			<!-- 策略类别 -->
+			<category name="strategy">
+			
+				<!-- 获取Session策略类别 -->
+				<category name="session">
+				
+					<!-- 默认的获取Session策略对象 -->
+					<object name="Default" creator="from_this_factory" class="bizmodule.entity.strategy.session.SimpleSessionStrategy">
+					</object>
+				
+					<!-- 简单获取Session策略 -->
+					<object name="SimpleSessionStrategy" class="com.bln.framework.biz.module.entity.strategy.session.SessionStrategy" activity="always_one">
+					
+					</object>
+					
+				</category>
+				
+				<!--鉴别行状态的策略类别 -->
+				<category name="rowstatus">
+				
+					<!-- 默认的策略 -->
+					<object name="Default" class="com.bln.framework.biz.module.entity.strategy.rowstatus.IdentifyRowStatusStrategy" activity="always_one">
+					</object>
+					
+				</category>
+				
+			</category>
+				
+		</category>
+		
+		<!-- 条件解析类别 -->
+		<category name="parsecondition">
+		
+			<!-- 解析条件对象 -->
+			<object name="ParseCondition" class="com.bln.framework.biz.module.parsecondition.ParseCondition" activity="always_one">
+				
+				<!-- 转换器工厂 -->
+				<property name="convertFactory" creator="from_other_factory" class="PersistFactory" value="converter.factory.Default"/>
+
+				<!-- 字段操作符解析器 -->
+				<property name="fieldOprParser" creator="from_this_factory" class="bizmodule.parsecondition.FieldOprParserCompatible"/>
+			
+			</object>
+
+			<!-- 字段操作符解析对象 -->
+			<object name="FieldOprParser" class="com.bln.framework.biz.module.parsecondition.fieldopr.parser.FieldOprParser">
+				
+			</object>			
+
+			<!-- 兼容性字段操作符解析对象 -->
+			<object name="FieldOprParserCompatible" class="com.bln.framework.biz.module.parsecondition.fieldopr.parser.FieldOprParserCompatible">
+				
+			</object>
+						
+		</category>
+		
+		<!-- 业务模型类别 -->
+		<category name="biz">
+	
+			<!-- 简单的数据库Session工厂 -->
+			<property name="sessionFactory" creator="from_other_factory" class="PersistFactory" value="session.factory.Simple"/>
+	
+			<!-- 表结构库-->
+			<property name="tableStruLib" creator="from_other_factory" class="PersistFactory" value="tablestrulib.Default"/>
+	
+			<!-- SQL实体工具-->
+			<property name="sqlEntityUtils" creator="from_other_factory" class="PersistFactory" value="util.SqlEntityUtils"/>
+				
+			<!-- 实例构造器 -->
+			<property name="sessionStrategy" creator="from_this_factory" class="bizmodule.entity.strategy.session.Default" />
+	
+			<!-- 实体库 -->
+			<property name="entityLib" creator="from_this_factory" class="bizmodule.EntityLib"/>
+		
+		</category>
+		
+	</category>
+
+	<!-- 持久层工厂 -->
+	<object name="PersistFactory" creator = "factorycenter" value="persist" activity="always_one">
+	
+	</object>
+	
+</objects>

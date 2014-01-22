@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding ="UTF-8"?>
+
+<!-- ========================@数据实体业务服务 ========================-->
+<objects name="bln-framework-bizservice-entity" mixin="/com/bln/framework/biz/service/entity/config/bln-framework-bizmodule-entity.xml">
+
+	<!-- 业务服务类别-->	
+	<category name="bizservice">
+
+		<!-- 服务层门面的类别 -->
+		<category name="facade">
+	
+			<!-- 服务执行之后的事件监听器 -->
+			<object name="ServiceAfterEventlisteners" collection_type="array" component_creator="from_this_factory" component_class="com.bln.framework.biz.service.facade.listener.IServiceAfterEventListener">
+
+				<!-- 用于关闭BLN Session -->
+				<prop class="bizservice.facade.Listener4BLNPersist" />
+
+			</object>
+
+			<!-- 用于bln persist session close -->
+			<object name="Listener4BLNPersist" class="com.bln.framework.biz.service.facade.listener.ServiceFacadeListener4Persist" activity="always_one">
+				
+
+				<!-- 响应报文过滤器，可以为多个 -->
+				<property name="sessionFactories" collection_type="array" component_creator="from_other_factory" component_class="com.bln.framework.persist.session.factory.ISessionFactory">
+					
+					<!-- 简单session工厂 -->
+					<prop class="PersistFactory" value="session.factory.Simple" /> 
+
+					<!-- 带有权限的session工厂 -->
+					<prop class="PersistFactory" value="session.factory.DataPrivilege" /> 
+						
+				</property>
+							
+			</object>
+	
+		</category>	
+			
+		<!-- 服务类别 -->
+		<category name="service">
+
+			<!-- 服务实例类别 -->
+			<category name="instance" activity="always_one">
+							
+				<!-- 实体服务类别 -->
+				<category name="entity">
+
+					<!-- 实体对象库 -->
+					<property name="entityLib" creator="from_this_factory" class="bizmodule.EntityLib" />
+				
+					<!-- 分页工具 -->
+					<property name="paginationUtil" creator="from_this_factory" class="bizservice.paginationUtil" />
+	
+					<!-- 排序信息提取器 -->
+					<property name="orderbyExtractor" creator="from_this_factory" class="bizservice.orderbyExtractor" />
+				
+				</category>
+				
+			</category>
+						
+		</category>
+		
+		<!-- 分页工具 -->
+		<object name="paginationUtil" class="com.bln.framework.biz.service.entity.util.pagination.PaginationUtil" activity="always_one"/>
+
+		<!-- 排序信息提取器 -->
+		<object name="orderbyExtractor" class="com.bln.framework.biz.service.entity.util.orderby.OrderbyExtractor" activity="always_one"/>
+
+	</category>
+	
+	<!-- 持久层工厂 -->
+	<object name="PersistFactory" creator = "factorycenter" value="persist" activity="always_one">
+	
+	</object>
+	
+</objects>
