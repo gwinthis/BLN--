@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding ="UTF-8"?>
+
+<!-- ========================@业务服务层对象 ========================-->
+<objects name ="bln-framework-bizservice" extends="/com/bln/framework/config/bln-framework-base.xml">
+		
+	<!-- 业务服务类别-->	
+	<category name="bizservice">
+
+		<!-- 应用配置对象 -->
+		<property name="appConfig" creator="from_this_factory" class="AppConfig" />
+
+		<!-- 服务层门面的类别 -->
+		<category name="facade">
+	
+			<!-- 默认的服务层门面 -->
+			<object name="Default" class="com.bln.framework.biz.service.facade.ServiceFacade" activity="always_one">
+	
+				<!-- 业务服务工厂--> 
+				<property name="serviceFactory" creator="factorycenter" value="this" />
+				
+				<!-- 业务服务前缀--> 
+				<property name="servicePrefix" value = "bizservice.service.instance" />
+					
+				<!-- 消息对象模板对象 -->
+				<property name="moTemplate" creator="from_this_factory" class="mo.template.Default" />
+	
+				<!-- 服务拦截器 -->
+				<property name="serviceIntercepters" creator="from_this_factory" class="bizservice.ServiceIntercepters" />
+
+				<!-- 服务执行之前的监听器 -->
+				<property name="serviceBeforeEventlisteners" creator="from_this_factory" class="bizservice.facade.ServiceBeforeEventlisteners" />
+
+				<!-- 服务执行之后的监听器 -->
+				<property name="serviceAfterEventlisteners" creator="from_this_factory" class="bizservice.facade.ServiceAfterEventlisteners" />
+
+				<!-- 服务执行最后的监听器 -->
+				<property name="serviceLastEventlisteners" creator="from_this_factory" class="bizservice.facade.ServiceLastEventlisteners" />
+
+				<!-- 服务执行发生异常的监听器 -->
+				<property name="serviceExceptionEventlisteners" creator="from_this_factory" class="bizservice.facade.ServiceExceptionEventlisteners" />
+
+				<!-- 异常响应消息对象 -->
+				<property name="exceptionMessage" creator="from_this_factory" class="bizservice.ExceptionMessage" />
+
+				<!-- 未知异常错误码 --> 
+				<property name="errorCode4unknowError" value = "FKS00000" />
+				
+				<!--线程池原型 -->
+				<property name="threadPoolProto" creator="from_this_factory" class="prototype.ExecutorService" />
+
+			</object>
+
+			<!-- 服务执行之前的事件监听器 -->
+			<object name="ServiceBeforeEventlisteners" collection_type="array" component_creator="from_this_factory" component_class="com.bln.framework.biz.service.facade.listener.IServiceBeforeEventListener">
+	
+				<!-- 用于登记上下文 -->
+				<prop class="bizservice.facade.Listener4Context" />
+	
+			</object>
+
+			<!-- 服务执行之后的事件监听器 -->
+			<object name="ServiceAfterEventlisteners" collection_type="array" component_creator="from_this_factory" component_class="com.bln.framework.biz.service.facade.listener.IServiceAfterEventListener"/>
+
+			<!-- 服务最后执行的事件监听器 -->
+			<object name="ServiceLastEventlisteners" collection_type="array" component_creator="from_this_factory" component_class="com.bln.framework.biz.service.facade.listener.IServiceLastEventListener"/>
+			
+			<!-- 服务执行出现异常的事件监听器 -->
+			<object name="ServiceExceptionEventlisteners" collection_type="array" component_creator="from_this_factory" component_class="com.bln.framework.biz.service.facade.listener.IServiceExceptionEventListener"/>
+									
+			<!-- 事件监听器用于服务上下文 -->
+			<object name="Listener4Context" class="com.bln.framework.biz.service.facade.listener.AddContextBeforeService" activity="always_one">
+		
+			</object>
+									
+		</category>
+		
+		<!-- 服务类别 -->
+		<category name="service">
+
+			<!-- 服务实例类别 -->
+			<category name="instance" activity="always_one">
+
+				<!-- 服务配置 --> 
+				<property name="serviceConfig" creator="new_object" class = "com.bln.framework.biz.service.instance.config.ServiceConfig">
+					
+					<!-- 服务装饰器 
+					<property name="serviceDecorater" creator="from_this_factory" class = "bizservice.service.decorater.transaction.ejb.RequireNewTransaction" />
+					-->
+					<!-- 服务装饰器
+					<property name="serviceDecorater" creator="from_this_factory" class = "bizservice.service.decorater.transaction.spring.RequireNewTransaction" />
+					--> 
+					<property name="serviceDecorater" creator="null_value" />
+					
+				</property>
+
+				<!-- 消息对象模板 -->
+				<property name="moTemplate" creator="from_this_factory" class="mo.template.Default" />
+
+			</category>
+							
+		</category>
+
+		<!-- 异常消息映射对象 -->
+		<object name="ExceptionMessage" class="com.bln.framework.biz.service.facade.message.ExceptionMessage" activity="always_one">
+			
+			<!-- 消息码映射 -->
+			<property name="errorCodeMap" collection_type="properties" collection_class="java.util.HashMap">				
+			</property>
+			
+		</object>
+				
+		<!-- 服务拦截器，可以为多个 -->
+		<object name="ServiceIntercepters" collection_type="array" component_creator="from_this_factory" component_class="com.bln.framework.biz.service.IServiceIntercepter">
+		</object>
+				 
+	</category>
+		
+</objects>
