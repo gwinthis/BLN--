@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding ="UTF-8"?>
+
+<objects name = "bln-framework-ediparse">
+
+	<!-- ========================@EDI解析层所使用的对象 ========================-->
+	<category name="edi">
+	
+		<!-- EDI边界类 -->
+		<category name="edge" activity="always_one">
+
+			<!-- 报文接收器 -->
+			<category name="edircver">
+
+				<!-- 业务服务层门面对象 
+				<property name="serviceFacade" creator="from_this_factory" class="bizservice.facade.Default" />
+				-->
+				
+				<!-- 客户端报文 -->
+				<category name="client">
+
+					<!-- 字符集编码 -->
+					<property name="encoding" value="UTF-8" />
+					
+					<!-- 是否输出请求报文 -->
+					<property name="outputRequestEdi" value="true" />
+				
+					<!-- 是否输出响应报文 -->
+					<property name="outputResponseEdi" value="true" />
+	
+					<!-- 请求报文过滤器器，可以为多个 -->
+					<property name="requestEdiFilters" collection_type="array" component_creator="from_this_factory" component_class="com.bln.framework.edi.edge.filter.IEdiFilter">
+	
+						<!-- deflate格式解压 
+						<prop class="edi.filter.compress.deflate.Decompressor" />
+						-->
+						
+					</property>
+	
+					<!-- 响应报文过滤器器，可以为多个 -->
+					<property name="responseEdiFilters" collection_type="array" component_creator="from_this_factory" component_class="com.bln.framework.edi.edge.filter.IEdiFilter">
+	
+						<!-- deflate格式解压 
+						<prop class="edi.filter.compress.deflate.Compressor" />
+						-->
+						
+					</property>
+
+					<!-- 报文输出器，可以为多个 -->
+					<property name="ediOutputs" collection_type="array" component_creator="from_this_factory" component_class="com.bln.framework.edi.output.IEdiOutput">
+			
+						<!-- 使用日志输出 -->
+						<prop class="edi.output.Log" />
+			
+					</property>
+						
+					<!--XML客户端报文接收器 -->
+					<object name="Xml" class="com.bln.framework.edi.edge.rcver.client.ClientEdiRcver">
+					
+						<!-- 消息对象构造器 -->
+						<property name="moBuilder" creator="from_this_factory" class="edi.mobuilder.clientxmlmo.ClientXmlEdi" />
+		
+						<!-- 报文构造器 -->
+						<property name="fileBuilderByMo" creator="from_this_factory" class="edi.filebuilder.ByClientMo" />
+		
+					</object>
+
+					<!--JSON客户端报文接收器 -->
+					<object name="Json" class="com.bln.framework.edi.edge.rcver.client.ClientEdiRcver">
+					
+						<!-- 消息对象构造器 -->
+						<property name="moBuilder" creator="from_this_factory" class="edi.mobuilder.clientjsonmo.ClientJsonEdi" />
+		
+						<!-- 报文构造器 -->
+						<property name="fileBuilderByMo" creator="from_this_factory" class="edi.filebuilder.ByClientMo" />
+		
+					</object>
+										
+				</category>
+				
+			</category>
+			
+		</category>
+		
+		<!-- 报文过滤器的类别 -->
+		<category name="filter" activity="always_one">
+	
+			<!-- 压缩处理过滤器 -->
+			<category name="compress">
+	
+				<!-- deflate类型压缩 -->
+				<category name="deflate">
+	
+					<!-- 压缩处理器 -->
+					<property name="compressor" creator="from_this_factory" class="compressor.deflate" />
+	
+					<!-- 压缩过滤器 -->
+					<object name="Compressor" class="com.bln.framework.edi.edge.filter.compress.CompressEdiFilter">
+					</object>
+	
+					<!-- 解压过滤器 -->
+					<object name="Decompressor" class="com.bln.framework.edi.edge.filter.compress.DecompressEdiFilter">
+					</object>
+	
+				</category>
+				
+				<!-- GZIP类型压缩 -->
+				<category name="gzip">
+	
+					<!-- 压缩处理器 -->
+					<property name="compressor" creator="from_this_factory" class="compressor.gzip" />
+	
+					<!-- 压缩过滤器 -->
+					<object name="Compressor" class="com.bln.framework.edi.edge.filter.compress.CompressEdiFilter">
+					</object>
+	
+					<!-- 解压过滤器 -->
+					<object name="Decompressor" class="com.bln.framework.edi.edge.filter.compress.DecompressEdiFilter">
+					</object>
+	
+				</category>
+	
+			</category>
+	
+		</category>
+
+
+		<!-- 报文输出器的类别 -->
+		<category name="output">
+	
+			<!-- 使用日志的输出器 -->
+			<object name="Log" class="com.bln.framework.edi.output.log.EdiOutputUsingLog" activity="always_one">
+	
+			</object>
+	
+		</category>
+		
+	</category>
+
+</objects>
