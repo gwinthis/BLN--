@@ -5,6 +5,7 @@
 package com.bln.framework.exception;
 
 import org.apache.commons.lang3.exception.ContextedRuntimeException;
+import org.apache.commons.lang3.exception.ExceptionContext;
 
 /**
  * <p>开发人员配置错误异常</p>
@@ -12,6 +13,19 @@ import org.apache.commons.lang3.exception.ContextedRuntimeException;
  * <p>比如从工厂中没有取到实例等错误。</p>
  */
 public class DeveloperConfigErrorException extends ContextedRuntimeException{
+
+	public DeveloperConfigErrorException(String message, Throwable cause,
+			ExceptionContext context) {
+		super(message, cause, context);
+	}
+
+	public DeveloperConfigErrorException(String message, Throwable cause) {
+		super(message, cause);
+	}
+
+	public DeveloperConfigErrorException(Throwable cause) {
+		super(cause);
+	}
 
 	public DeveloperConfigErrorException(){
 		super();
