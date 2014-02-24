@@ -10,16 +10,15 @@
 
 			<!-- 报文接收器 -->
 			<category name="edircver">
-
-				<!-- 业务服务层门面对象 
-				<property name="serviceFacade" creator="from_this_factory" class="bizservice.facade.Default" />
-				-->
 				
 				<!-- 客户端报文 -->
 				<category name="client">
 
 					<!-- 字符集编码 -->
 					<property name="encoding" value="UTF-8" />
+
+					<!-- 字符集编码 -->
+					<property name="serviceFacadeLocator" creator="from_this_factory" class="edi.servicefacadelocator.Default" />
 					
 					<!-- 是否输出请求报文 -->
 					<property name="outputRequestEdi" value="true" />
@@ -80,6 +79,34 @@
 			</category>
 			
 		</category>
+
+		<!-- 服务层门面对象定位器类别 -->
+		<category name="servicefacadelocator" activity="always_one">
+		
+			<!-- 默认对象 -->
+			<object name="Default" creator="from_this_factory" class="edi.servicefacadelocator.multi.ByURL"/>
+			
+			<!-- 单个服务门面对象 -->
+			<object name="SingleFacade" class="com.bln.framework.edi.service.facadelocator.impl.ServiceFacadeLocatorSingle">
+			
+				<!-- 业务服务层门面对象 -->
+				<property name="serviceFacade" creator="from_this_factory" class="bizservice.facade.Default" />
+				
+			</object>
+			
+			<!-- 多个服务门面对象 -->
+			<category name="multi">
+
+				<!-- 业务服务层门面对象路径 -->
+				<property name="serviceFacadePath" value="bizservice.facade.Default" />
+			
+				<!-- 根据URL定位服务门面对象 -->
+				<object name="ByURL" class="com.bln.framework.edi.service.facadelocator.impl.ServiceFacadeLocatorUsingURL"/>
+				
+			</category>
+
+		</category>
+		
 		
 		<!-- 报文过滤器的类别 -->
 		<category name="filter" activity="always_one">

@@ -100,6 +100,21 @@ public class BLNFactoryCenter extends BaseObj{
 		return blnFactory;
 	}
 
+	/**
+	 * 获取所有工厂
+	 * @return Map<String, IBLNFactory>
+	 */ 
+	public Map<String, IBLNFactory> getAllFactories(){
+	
+		Map<String, IBLNFactory> copy = null;
+		
+		if(factoryCache != null){
+			copy = new HashMap<String, IBLNFactory>();
+			copy.putAll(this.factoryCache);
+		}		
+		return copy;
+	}
+	
 	/* (non-Javadoc)
 	 * @see com.bln.framework.factory.type.ioc.config.manager.IConfigManager#registerConfigLoader(com.bln.framework.factory.type.ioc.config.loader.IConfigLoader)
 	 */

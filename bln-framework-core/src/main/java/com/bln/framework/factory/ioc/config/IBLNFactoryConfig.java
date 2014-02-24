@@ -207,7 +207,13 @@ public interface IBLNFactoryConfig extends IXMLFileStru{
 	 * 类路径为对象名称
 	 */
 	public static final String VALUE_CREATOR_FROM_OTHER_FACTORY = "from_other_factory";
-	
+
+	/**
+	 * <p>表示实例从指定的工厂中获取。</p>
+	 * class为工厂名称,  value为对象名称
+	 */
+	public static final String VALUE_CREATOR_FROM_THE_FACTORY = "from_the_factory";
+
 	/**
 	 * <p>表示每次赋值特性的时候需要生成，实例为外部服务，需要按照定义外部服务的方式定义。</p>
 	 * 特性值为服务对象信息
@@ -226,6 +232,12 @@ public interface IBLNFactoryConfig extends IXMLFileStru{
 	 */
 	public static final String VALUE_CREATOR_FACTORYCENTER = "factorycenter";
 
+	/**
+	 * <p>从工厂中心中获取指定路径的对象。</p>
+	 * 类路径为对象名称
+	 */
+	public static final String VALUE_CREATOR_LISTOBJECTSFROMFACTORYCENTER = "list_objects_from_factorycenter";
+	
 	/**
 	 * <p>表示每次赋值特性为空值。</p>
 	 */

@@ -6,7 +6,7 @@ package com.bln.framework.edi.service.facadelocator.impl;
 
 import com.bln.framework.biz.service.IServiceFacade;
 import com.bln.framework.edi.service.facadelocator.IServiceFacadeLocator;
-import com.bln.framework.edi.service.facadelocator.exception.CantLocateServiceFacadeException;
+import com.bln.framework.edi.service.facadelocator.exception.CantLocateServiceFactoryException;
 import com.bln.framework.mo.IMessageObject;
 
 /**
@@ -24,7 +24,7 @@ public class ServiceFacadeLocatorSingle implements IServiceFacadeLocator {
 	 */
 	public IServiceFacade locate(IMessageObject reqMo, Object originalRequestObject){
 		if(serviceFacade == null){
-			CantLocateServiceFacadeException clsfe = new CantLocateServiceFacadeException("property serviceFacade of ServiceFacadeLocatorSingle is null, please define the property!");
+			CantLocateServiceFactoryException clsfe = new CantLocateServiceFactoryException("property serviceFacade of ServiceFacadeLocatorSingle is null, please define the property!");
 			throw clsfe;
 		}
 		return serviceFacade;

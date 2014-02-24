@@ -11,33 +11,33 @@ import com.bln.framework.exception.DeveloperConfigErrorException;
 /**
  * 无法定位服务层门面对象异常
  */
-public class CantLocateServiceFacadeException extends DeveloperConfigErrorException{
+public class CantLocateServiceFactoryException extends DeveloperConfigErrorException{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public CantLocateServiceFacadeException() {
+	public CantLocateServiceFactoryException() {
 		super();
 		
 	}
 
-	public CantLocateServiceFacadeException(String info) {
+	public CantLocateServiceFactoryException(String info) {
 		super(info);
 	}
 	
-	public CantLocateServiceFacadeException(String message, Throwable cause,
+	public CantLocateServiceFactoryException(String message, Throwable cause,
 			ExceptionContext context) {
 		super(message, cause, context);
 	}
 
-	public CantLocateServiceFacadeException(String message, Throwable cause) {
+	public CantLocateServiceFactoryException(String message, Throwable cause) {
 		super(message, cause);
 		
 	}
 
-	public CantLocateServiceFacadeException(Throwable cause) {
+	public CantLocateServiceFactoryException(Throwable cause) {
 		super(cause);
 		
 	}

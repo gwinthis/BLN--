@@ -4,6 +4,8 @@
  */
 package com.bln.framework.factory.ioc;
 
+import java.util.List;
+
 import com.bln.framework.factory.IFactory;
 
 /**
@@ -16,5 +18,11 @@ public interface IBLNFactory extends IFactory<Object>{
 	 * @return the factoryName
 	 */
 	public String getFactoryName();
+
+	/**
+	 * 获取所有对象路径名
+	 * @return 所有对象路径名
+	 */
+	public abstract List<String> getObjectNames();
 
 }

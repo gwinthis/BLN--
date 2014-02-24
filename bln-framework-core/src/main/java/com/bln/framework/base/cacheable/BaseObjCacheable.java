@@ -36,6 +36,12 @@ public class BaseObjCacheable extends BaseObj{
 	protected Object getFromCache(String key){
 		return cache.get(key);
 	}
-
-
+	
+	/**
+	 * 对象是否在缓存中存在
+	 * @param key 缓存对象的名称
+	 */
+	protected boolean containsKey(String key){
+		return cache.containsKey(key);
+	}
 }

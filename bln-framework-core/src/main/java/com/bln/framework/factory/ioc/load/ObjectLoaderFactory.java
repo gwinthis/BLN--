@@ -17,9 +17,11 @@ import com.bln.framework.factory.ioc.load.collections.MapLoader;
 import com.bln.framework.factory.ioc.load.collections.PropertiesLoader;
 import com.bln.framework.factory.ioc.load.creator.BuilderCreator;
 import com.bln.framework.factory.ioc.load.creator.FactoryCenterCreator;
+import com.bln.framework.factory.ioc.load.creator.FromFactoryCreator;
 import com.bln.framework.factory.ioc.load.creator.FromOtherFactoryCreator;
 import com.bln.framework.factory.ioc.load.creator.FromPackageCreator;
 import com.bln.framework.factory.ioc.load.creator.FromThisFactoryCreator;
+import com.bln.framework.factory.ioc.load.creator.ListObjectsFromFactoryCenterCreator;
 import com.bln.framework.factory.ioc.load.creator.NewObjectCreator;
 import com.bln.framework.factory.ioc.load.creator.NullObjectCreator;
 import com.bln.framework.factory.ioc.load.creator.OutServiceCreator;
@@ -64,6 +66,11 @@ public class ObjectLoaderFactory extends BaseObjCacheable{
 	static IObjectLoader fromOtherFactoryCreator = new FromOtherFactoryCreator();
 
 	/**
+	 * 从指定工厂获取对象的加载器
+	 */
+	static IObjectLoader fromTheFactoryCreator = new FromFactoryCreator();
+
+	/**
 	 * 新建对象的加载器
 	 */
 	static IObjectLoader newObjectCreator = new NewObjectCreator();
@@ -83,6 +90,11 @@ public class ObjectLoaderFactory extends BaseObjCacheable{
 	 */
 	static IObjectLoader factoryCenterCreator = new FactoryCenterCreator();
 
+	/**
+	 * 从工厂中心获取指定路径的对象
+	 */
+	static IObjectLoader listObjectsFromFactoryCenterCreater = new ListObjectsFromFactoryCenterCreator();
+	
 	/**
 	 * 空值对象加载器
 	 */
@@ -126,7 +138,7 @@ public class ObjectLoaderFactory extends BaseObjCacheable{
 		String value = config.getAttr(IBLNFactoryConfig.ATTR_VALUE);
 		
 		if(!StringUtils.isEmpty(creatorType)){
-			
+				
 			//Creator加载器
 			if(IBLNFactoryConfig.VALUE_CREATOR_FROM_THIS_FACTORY.equals(creatorType)){
 				objectLoader = fromThisFactoryCreator;
@@ -134,6 +146,8 @@ public class ObjectLoaderFactory extends BaseObjCacheable{
 				objectLoader = fromOtherFactoryCreator;
 			}else if(IBLNFactoryConfig.VALUE_CREATOR_TRANS_FROM_VALUE.equals(creatorType)){
 				objectLoader = transValueToOthCreator;
+			}else if(IBLNFactoryConfig.VALUE_CREATOR_FROM_THE_FACTORY.equals(creatorType)){
+				objectLoader = fromTheFactoryCreator;
 			}else if(IBLNFactoryConfig.VALUE_CREATOR_OTS_LOCATER.equals(creatorType)){
 				objectLoader = serviceCreator;
 			}else if(IBLNFactoryConfig.VALUE_CREATOR_BUILDER.equals(creatorType)){
@@ -142,6 +156,8 @@ public class ObjectLoaderFactory extends BaseObjCacheable{
 				objectLoader = newObjectCreator;
 			}else if(IBLNFactoryConfig.VALUE_CREATOR_FACTORYCENTER.equals(creatorType)){
 				objectLoader = factoryCenterCreator;
+			}else if(IBLNFactoryConfig.VALUE_CREATOR_LISTOBJECTSFROMFACTORYCENTER.equals(creatorType)){
+				objectLoader = listObjectsFromFactoryCenterCreater;
 			}else if(IBLNFactoryConfig.VALUE_CREATOR_FROMPACKAGE.equals(creatorType)){
 				objectLoader = fromPackgeCreator;
 			}else if(IBLNFactoryConfig.VALUE_CREATOR_NULLVALE.equals(creatorType)){
